@@ -28,6 +28,9 @@ later version.  See [[file:COPYING][COPYING]].
   
 ** Files to remove from the next release
 
+[This patched version from the Emacsmirror actually already removes
+these files.]
+
 These files are maintained in a separate repository, which you can
 find after the "Homepage:" keyword in the files themselves:
 
@@ -48,6 +51,10 @@ find after the "Homepage:" keyword in the files themselves:
 - ox-rss.el :: RSS 2.0 Back-End for Org Export Engine
 - org-attach-embedded-images.el :: Transmute images to attachments
 - org-velocity.el :: something like Notational Velocity for Org
+
+These files are now part of Org itself:
+
+- ox-koma-letter.el :: KOMA Scrlttr2 Back-End for Org Export Engine
 
 ** Other files
 *** Org utils
