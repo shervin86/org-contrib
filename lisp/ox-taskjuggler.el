@@ -301,7 +301,7 @@ but before any resource and task declarations."
   :type '(string :tag "Preamble"))
 
 (defcustom org-taskjuggler-valid-task-attributes
-  '(account start note duration endbuffer endcredit end
+  '(account  note duration endbuffer endcredit end
 	    flags journalentry length limits maxend maxstart minend
 	    minstart period reference responsible scheduling
 	    startbuffer startcredit statusnote chargeset charge)
@@ -328,7 +328,7 @@ list."
 
 (defcustom org-taskjuggler-valid-resource-attributes
   '(limits vacation shift booking efficiency journalentry rate
-	   workinghours flags)
+	   workinghours flags leaves)
   "Valid attributes for Taskjuggler resources.
 If one of these appears as a property for a headline, it will be
 exported with the corresponding resource."
@@ -827,6 +827,8 @@ a unique id will be associated to it."
          (effort (let ((property
 			(intern (concat ":" (upcase org-effort-property)))))
 		   (org-element-property property task)))
+	 (start (org-taskjuggler-get-start task))
+	 (end   (org-taskjuggler-get-end task))
          (milestone
           (or (org-element-property :MILESTONE task)
               (not (or (org-element-map (org-element-contents task) 'headline
@@ -834,8 +836,7 @@ a unique id will be associated to it."
 		       effort
 		       (org-element-property :LENGTH task)
 		       (org-element-property :DURATION task)
-		       (and (org-taskjuggler-get-start task)
-			    (org-taskjuggler-get-end task))
+		       (and start end )
 		       (org-element-property :PERIOD task)))))
          (priority
           (let ((pri (org-element-property :priority task)))
@@ -848,6 +849,8 @@ a unique id will be associated to it."
              (org-taskjuggler-get-id task info)
              (org-taskjuggler-get-name task))
      ;; Add default attributes.
+     (and start
+	  (format "  start %s\n" start))
      (and depends
           (format "  depends %s\n"
                   (org-taskjuggler-format-dependencies depends task info)))
@@ -862,6 +865,7 @@ a unique id will be associated to it."
      (and priority (format "  priority %s\n" priority))
      (and milestone "  milestone\n")
      ;; Add other valid attributes.
+     ;(and (org-taskjuggler-get-start task) (format-time-string "%Y-%m-%d" (org-taskjuggler-get-start task)))
      (org-taskjuggler--indent-string
       (org-taskjuggler--build-attributes
        task org-taskjuggler-valid-task-attributes))
